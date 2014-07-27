@@ -1,0 +1,4 @@
+var PARSE_APP = {
+	ID: "R3mmqiZClpVafq8PLumb7QzXp2YRjZK35q2MyLes",
+	KEY: "Pyp0NRAMFqsK1y8DAPhuirSoOKiCJfpDVoI96XEr"
+}

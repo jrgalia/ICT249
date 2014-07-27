@@ -1,7 +1,6 @@
 Parse.initialize(PARSE_APP.ID, PARSE_APP.KEY);
 var Politician = Parse.Object.extend('Politician');
 
-
 function listItem(id, img, name, position, address) {
 	//TODO change profile.png
 	img = 'img/profile.png';
@@ -26,13 +25,17 @@ function loadIndex() {
 //when panel-home is loaded
 function loadHomePage() {
 	var user = Parse.User.current();
+	if (user === null){
+		$.ui.loadContent('#panel-login', false, false);
+		return;
+	}
 	
 	var town = user.get('town');
 	var province = user.get('province');
 	var query = new Parse.Query(Politician);
+    query.equalTo('province', province);
     query.equalTo('town', town);
     
-    //TODO compound query "and"
     query.find({
     	success: function(results) {
     		var location = town + ', ' + province;
@@ -49,7 +52,7 @@ function loadHomePage() {
     		$('#panel-home .profile-list').html(output.join(''));
     	},
     	error: function(error) {
-    		alert("Error: " + error.code + " " + error.message);
+    		navigator.notification.alert(error.message, null, 'Error');
     	}
     });
 }
@@ -68,6 +71,7 @@ function loadUserProfile() {
 
 
 $(document).ready(function() {
+	
 	//region dropdown
 	$('select.region').on('change', function(e, province, town) {
 		var file = this.options[this.selectedIndex].getAttribute('data-file');
@@ -96,7 +100,7 @@ $(document).ready(function() {
 		        }
 		    },
 		    error: function (request, status, error) {
-		        alert('error:' + request.responseText);
+		        navigator.notification.alert(request.responseText, null, 'Error');
 		    }
 		});
 	});
@@ -106,7 +110,6 @@ $(document).ready(function() {
 	$('select.province').on('change', function(e, town) {
 		var $region = $(this).siblings('.region');
 		var file = $region[0].options[$region[0].selectedIndex].getAttribute('data-file');
-		console.log('file ' + file);
 		var province = $(this).val();
 		var $town = $(this).siblings('.town');
 		$town.empty();
@@ -128,14 +131,13 @@ $(document).ready(function() {
 		        }
 		    },
 		    error: function (request, status, error) {
-		        alert('error:' + request.responseText);
+		        navigator.notification.alert(request.responseText, null, 'Error');
 		    }
 		});
 	});
 	
 	
 	$('#signup-submit').on('click', function(e){
-		//TODO validate input
 		e.preventDefault();
 		var email = $('#signup-email').val();
 		var password = $('#signup-password').val();
@@ -143,16 +145,31 @@ $(document).ready(function() {
 		var region = $('#signup-region').val();
 		var province = $('#signup-province').val();
 		var town = $('#signup-town').val();
-		console.log('region:' + region);
+		
+		if (displayName.length === 0 || !displayName.trim()) {
+			navigator.notification.alert('display name is required', null, 'Error');
+			return;
+		}
+		if (region.length === 0) {
+			navigator.notification.alert('region is required', null, 'Error');
+			return;
+		}
+		if (province.length === 0) {
+			navigator.notification.alert('province is required', null, 'Error');
+			return;
+		}
+		if (town.length === 0) {
+			navigator.notification.alert('town is required', null, 'Error');
+			return;
+		}
 		
 		Parse.User.signUp(email, password, 
 				{ email:email, display_name:displayName, region:region, province:province, town:town, ACL: new Parse.ACL()},
 				{
 			        success: function (user) {
-			           console.log('success:' + user);
 			           $.ui.loadContent('#panel-home', false, false);
 			        }, error: function(user, error) {
-			        	console.log(error.message);
+			    		navigator.notification.alert(error.message, null, 'Error');
 			        }
 				});
 		
@@ -161,21 +178,17 @@ $(document).ready(function() {
 	
 	//login
 	$('#login-submit').on('click', function(e){
-		//TODO validate input
 		e.preventDefault();
 		var email = $('#login-email').val();
 		var password = $('#login-password').val();
-		console.log('email:' + email);
-		console.log('password:' + password);
 		Parse.User.logIn(email, password, {
 	        success: function (user) {
-		           console.log('success login:' + user);
-		           $.ui.loadContent('#panel-home', false, false);
-		           
+	           $.ui.loadContent('#panel-home', false, false);
+	           
 	        }, error: function(user, error) {
-	        	console.log(error.message);
+	    		navigator.notification.alert(error.message, null, 'Error');
 	        }
-	        })
+		})
 	});
 	
 	
@@ -189,13 +202,26 @@ $(document).ready(function() {
 	
 	
 	$('#panel-search-submit').on('click', function() {
+		var region = $('#search-region').val();
 		var province = $('#search-province').val();
 		var town = $('#search-town').val();
+		if (region.length === 0) {
+			navigator.notification.alert('region is required', null, 'Error');
+			return;
+		}
+		if (province.length === 0) {
+			navigator.notification.alert('province is required', null, 'Error');
+			return;
+		}
+		if (town.length === 0) {
+			navigator.notification.alert('town is required', null, 'Error');
+			return;
+		}
 		
 	    var query = new Parse.Query(Politician);
+	    query.equalTo('province', province);
 	    query.equalTo('town', town);
 	    
-	    //TODO compound query "and"
 	    query.find({
 	    	success: function(results) {
 	    		
@@ -215,7 +241,7 @@ $(document).ready(function() {
 	    		$('#panel-search-result .profile-list').html(output.join(''));
 	    	},
 	    	error: function(error) {
-	    		alert("Error: " + error.code + " " + error.message);
+	    		navigator.notification.alert(error.message, null, 'Error');
 	    	}
 	    });
 	});
@@ -224,8 +250,7 @@ $(document).ready(function() {
 	$('.profile-list').on('click', 'a', function(e){
 		e.preventDefault();
 		var objectId = $(this).data('objectId');
-		console.log('objectId:' + objectId);
-		
+
 		var query = new Parse.Query(Politician);
 		query.get(objectId, {
 			success: function(object) {
@@ -247,27 +272,42 @@ $(document).ready(function() {
 				$.ui.loadContent('#panel-politician-profile', false, false);
 			},
 			error: function(object, error) {
-			    // The object was not retrieved successfully.
-			    // error is a Parse.Error with an error code and description.
+				navigator.notification.alert(error.message, null, 'Error');
 			}
 		})
 	});
 	
 	
 	$('#user-profile-submit').on('click', function(e) {
-		//TODO validate here
 		e.preventDefault();
 		var displayName = $('#user-profile-display-name').val();
 		var region = $('#user-profile-region').val();
 		var province = $('#user-profile-province').val();
 		var town = $('#user-profile-town').val();
 		
+		if (displayName.length === 0 || !displayName.trim()) {
+			navigator.notification.alert('display name is required', null, 'Error');
+			return;
+		}
+		if (region.length === 0) {
+			navigator.notification.alert('region is required', null, 'Error');
+			return;
+		}
+		if (province.length === 0) {
+			navigator.notification.alert('province is required', null, 'Error');
+			return;
+		}
+		if (town.length === 0) {
+			navigator.notification.alert('town is required', null, 'Error');
+			return;
+		}
+		
 		var user = Parse.User.current();
 		user.save({display_name:displayName, region:region, province:province, town:town}, {
 			success: function (user) {
 				console.log('successfully saved');
 			}, error: function(user, error) {
-				console.log(error.message);
+				navigator.notification.alert(error.message, null, 'Error');
 			}
 		});
 	});
