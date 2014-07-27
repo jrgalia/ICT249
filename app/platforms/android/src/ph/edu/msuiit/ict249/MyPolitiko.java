@@ -17,7 +17,7 @@
        under the License.
  */
 
-package ph.edu.msuiit.ict249.mypolitiko;
+package ph.edu.msuiit.ict249;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

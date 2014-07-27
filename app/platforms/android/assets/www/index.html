@@ -19,15 +19,37 @@
 -->
 <html>
     <head>
+	    <title>My Politiko</title>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        
+        <!--<link rel="stylesheet" type="text/css" href="http://cdn.app-framework-software.intel.com/2.1/af.ui.css" />-->
+		<!--<link rel="stylesheet" type="text/css" href="http://cdn.app-framework-software.intel.com/2.1/icons.css" />-->
+		<link rel="stylesheet" type="text/css" href="css/af.ui.base.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/icons.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/icons.fa.css">
+		<link rel="stylesheet" type="text/css" href="css/icons.typcn.css">
+		<link rel="stylesheet" type="text/css" href="css/custom.css">
+		
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <title>Hello World</title>
+        
+        <!--<script type="text/javascript" charset="utf-8" src="http://cdn.app-framework-software.intel.com/2.1/appframework.ui.min.js"></script>-->
+		<script type="text/javascript" charset="utf-8" src="js/appframework.ui.min.js"></script>
+		
+		<!-- af.ui plugins -->
+		<link rel="stylesheet" type="text/css" href="css/af.ui.range.css">
+		<script type="text/javascript" charset="utf-8" src="js/af.ui.range.js"></script>
+		
+		<script type="text/javascript" charset="utf-8" src="js/parse-1.2.19.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
+	
     </head>
     <body>
+    	<!--
         <div class="app">
             <h1>Apache Cordova</h1>
             <div id="deviceready" class="blink">
@@ -35,10 +57,278 @@
                 <p class="event received">Device is Ready</p>
             </div>
         </div>
+        -->
+        
+        <!--
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();
         </script>
+        -->
+
+	<div id="afui">
+		<div id="content">
+			
+			<!--index panel-->
+			<div id="panel-index" class="panel" data-load="loadIndex" selected="true" >
+				<header>
+					<h1>My Politiko</h1>
+				</header>
+				<div>
+					<img src="img/voice.png"
+						style="display: block; margin-left: auto; margin-right: auto; height:30%;"/>
+					
+					<a class="button block" href="#panel-login">Login</a>
+					<a class="button block" href="#panel-signup">Sign Up</a>
+				</div>
+				<footer>
+				</footer>
+			</div>
+			
+			
+			<!--login panel-->
+			<div id="panel-login" class="panel">
+				<header>
+					<h1>Login</h1>
+				</header>
+				
+				<div>
+					<br/>
+					<form>
+						<input type="email" id="login-email" placeholder="email" />
+						<input type="password" id="login-password" placeholder="password" />
+						<input type="submit" id="login-submit" class="button" value="Login" />
+						<a href="#panel-signup" class="button">Signup</a>
+					</form>
+				</div>
+				<footer>
+				</footer>
+			</div>
+						
+
+			<!--signup panel-->
+			<div id="panel-signup" class="panel">
+				<header>
+					<h1>Sign Up</h1>
+					<a id="backButton" class="button backButton">Back</a>
+				</header>
+				
+				<div>
+					<br/>
+					<form>
+						<input type="email" id="signup-email" placeholder="email" />
+						<input type="password" id="signup-password" placeholder="password" />
+						<input type="text" id="signup-display-name" placeholder="display name" />
+						<select id="signup-region" class="region">
+							<option value="">--region--</option>
+							<option value="CAR" data-file="car">CAR</option>
+							<option value="Ilocos Region" data-file="reg1">Ilocos Region</option>
+							<option value="Cagayan Valley" data-file="reg2">Cagayan Valley</option>
+							<option value="Central Luzon" data-file="reg3">Central Luzon</option>
+							<option value="Metro Manila" data-file="ncr">Metro Manila</option>
+							<option value="CALABARZON" data-file="reg4a">CALABARZON</option>
+							<option value="MIMAROPA" data-file="reg4b">MIMAROPA</option>
+							<option value="Bicol" data-file="reg5">Bicol</option>
+							<option value="Western Visayas" data-file="reg6">Western Visayas</option>
+							<option value="Central Visayas" data-file="reg7">Central Visayas</option>
+							<option value="Eastern Visayas" data-file="reg8">Eastern Visayas</option>
+							<option value="Zamboanga Peninsula" data-file="reg9">Zamboanga Peninsula</option>
+							<option value="Northern Mindanao" data-file="reg10">Northern Mindanao</option>
+							<option value="Davao Region" data-file="reg11">Davao Region</option>
+							<option value="SOCCSKSARGEN" data-file="reg12">SOCCSKSARGEN</option>
+							<option value="CARAGA" data-file="reg13">CARAGA</option>
+							<option value="ARMM" data-file="armm">ARMM</option>
+  						</select>
+  				
+						<select id="signup-province" class="province">
+							<option value="">--province--</option>
+		  				</select>
+		  				
+						<select id="signup-town" class="town">
+							<option value="">--town--</option>
+		  				</select>
+						<input type="submit" id="signup-submit" class="button block" value="Signup"/>
+					</form>
+				</div>
+				<footer>
+				</footer>
+			</div>
+			
+		
+			<!--home panel-->		
+			<div id="panel-home" class="panel" data-load="loadHomePage" data-footer="footer-ui">
+				<header>
+					<h1>My Politiko</h1>
+					<a id="menubadge" class="menuButton" href="#panel-settings"></a>
+				</header>
+				<ul class="list profile-list">					
+				</ul>
+			</div>
+			
+			<!--my location panel-->
+			<div class="panel" id="panel-my-location" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1>Iligan City, Lanao del Norte</h1>
+					<a id="menubadge" class="menuButton" href="#panel-settings"></a>					
+				</header>
+				<ul class="list profile-list">
+				
+				</ul>				
+			</div>
+			
+			
+			<!--search panel-->
+			<div class="panel" id="panel-search" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1>Search</h1>
+					<a id="menubadge" class="menuButton" href="#panel-settings"></a>					
+				</header>
+				<br/>
+				<select id="search-region" class="region">
+					<option value="">--region--</option>
+					<option value="CAR" data-file="car">CAR</option>
+					<option value="Ilocos Region" data-file="reg1">Ilocos Region</option>
+					<option value="Cagayan Valley" data-file="reg2">Cagayan Valley</option>
+					<option value="Central Luzon" data-file="reg3">Central Luzon</option>
+					<option value="Metro Manila" data-file="ncr">Metro Manila</option>
+					<option value="CALABARZON" data-file="reg4a">CALABARZON</option>
+					<option value="MIMAROPA" data-file="reg4b">MIMAROPA</option>
+					<option value="Bicol" data-file="reg5">Bicol</option>
+					<option value="Western Visayas" data-file="reg6">Western Visayas</option>
+					<option value="Central Visayas" data-file="reg7">Central Visayas</option>
+					<option value="Eastern Visayas" data-file="reg8">Eastern Visayas</option>
+					<option value="Zamboanga Peninsula" data-file="reg9">Zamboanga Peninsula</option>
+					<option value="Northern Mindanao" data-file="reg10">Northern Mindanao</option>
+					<option value="Davao Region" data-file="reg11">Davao Region</option>
+					<option value="SOCCSKSARGEN" data-file="reg12">SOCCSKSARGEN</option>
+					<option value="CARAGA" data-file="reg13">CARAGA</option>
+					<option value="ARMM" data-file="armm">ARMM</option>
+  				</select>
+  				
+				<select id="search-province" class="province">
+					<option value="">--province--</option>
+  				</select>
+  				
+				<select id="search-town" class="town">
+					<option value="">--town--</option>
+  				</select>
+  				
+  				<input type="submit" id="panel-search-submit" class="button block" value="Search"/> 		
+			</div>
+			
+			
+			<!--search panel result-->
+			<div class="panel y-scroll" id="panel-search-result" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1 id="search-location"> </h1>
+					<a id="menubadge" class="menuButton" href="#panel-settings"></a>					
+				</header>
+				<div>
+				<ul class="list profile-list">
+					
+				</ul>
+				</div>				
+			</div>
+
+			<!--settings panel-->
+			<div class="panel" id="panel-settings" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1>Settings</h1>				
+				</header>
+				<ul class="list">
+					<li><a class="icon fa-user" href="#panel-user-profile">Update Profile</a></li>
+					<li><a id="settings-logout" class="icon fa-power-off" href="#">Log-out</a></li>
+				</ul>
+			</div>
+
+
+			<!--user-profile panel-->
+			<div id="panel-user-profile" class="panel" data-load="loadUserProfile" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1>Profile</h1>				
+				</header>
+				
+				<div>
+					<br/>
+					<form>
+						<input type="email" id="user-profile-email" placeholder="email" readonly/>
+						<input type="text" id="user-profile-display-name" placeholder="display name" />
+						<select id="user-profile-region" class="region">
+							<option value="">--region--</option>
+							<option value="CAR" data-file="car">CAR</option>
+							<option value="Ilocos Region" data-file="reg1">Ilocos Region</option>
+							<option value="Cagayan Valley" data-file="reg2">Cagayan Valley</option>
+							<option value="Central Luzon" data-file="reg3">Central Luzon</option>
+							<option value="Metro Manila" data-file="ncr">Metro Manila</option>
+							<option value="CALABARZON" data-file="reg4a">CALABARZON</option>
+							<option value="MIMAROPA" data-file="reg4b">MIMAROPA</option>
+							<option value="Bicol" data-file="reg5">Bicol</option>
+							<option value="Western Visayas" data-file="reg6">Western Visayas</option>
+							<option value="Central Visayas" data-file="reg7">Central Visayas</option>
+							<option value="Eastern Visayas" data-file="reg8">Eastern Visayas</option>
+							<option value="Zamboanga Peninsula" data-file="reg9">Zamboanga Peninsula</option>
+							<option value="Northern Mindanao" data-file="reg10">Northern Mindanao</option>
+							<option value="Davao Region" data-file="reg11">Davao Region</option>
+							<option value="SOCCSKSARGEN" data-file="reg12">SOCCSKSARGEN</option>
+							<option value="CARAGA" data-file="reg13">CARAGA</option>
+							<option value="ARMM" data-file="armm">ARMM</option>
+		  				</select>			  				
+		  				<select id="user-profile-province" class="province">
+							<option value="">--province--</option>
+  						</select>
+						<select id="user-profile-town" class="town">
+							<option value="">--town--</option>
+		  				</select>
+		  				
+						<input type="submit" id="user-profile-submit" class="button" value="Update" />
+					</form>
+				</div>
+				<footer>
+				</footer>
+			</div>
+
+
+			<!--politician-profile panel-->
+			<div id="panel-politician-profile" class="panel" data-footer="footer-ui">
+				<header>
+					<a id="backButton" class="button backButton">Back</a>
+					<h1>Politician</h1>				
+				</header>
+				<div>
+					<div style="text-align:center;">
+						<img src="img/profile.png" 
+							style="display: block; margin-left: auto; margin-right: auto; width:100%; max-width:300px;"/>
+						<h2 id="panel-politician-profile-name"></h2>
+						<h3 id="panel-politician-profile-address"></h3>
+					</div>
+					<hr/>
+					<div>
+					<a class="button" href="#panel-rate-politician">rate</a>
+					</div>
+				</div>
+			</div>
+					
+					
+			<!--rate-politician panel-->
+			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui">
+			<br/>
+			</div>
+		</div>
+		
+		<div id="navbar">
+			<footer	id="footer-ui">
+				<a class="icon home" href="#panel-home">Home</a>
+				<a class="icon typcn-location" href="#panel-my-location">My Location</a>
+				<a class="icon fa-search" href="#panel-search">Search</a>			
+			</footer>
+		</div>
+		
+	</div>        
     </body>
 </html>

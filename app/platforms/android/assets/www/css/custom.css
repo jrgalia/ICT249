@@ -1,0 +1,15 @@
+#afui h2 {
+	display: inline;
+}
+.profile-list {
+	text-align: center;
+}
+.profile-list img{
+	display: block;
+	margin: auto;
+	max-height: 100px;
+} 
+
+#afui .profile-list h2, #afui .profile-list h3{
+	margin-bottom: 0px;
+}

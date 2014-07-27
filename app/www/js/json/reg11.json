@@ -1,0 +1,69 @@
+{
+    "province": [
+        "Compostela Valley",
+        "Davao del Norte",
+        "Davao del Sur",
+        "Davao Occidental",
+        "Davao Oriental"
+    ],
+    
+    "Compostela Valley": [
+        "Compostela",
+        "Laak",
+        "Mabini",
+        "Maco",
+        "Maragusan",
+        "Mawab",
+        "Monkayo",
+        "Montevista",
+        "Nabunturan",
+        "New Bataan",
+        "Pantukan"
+    ],
+    "Davao del Norte": [
+        "Asuncion",
+        "Braulio E. Dujali",
+        "Carmen",
+        "Kapalong",
+        "New Corella",
+        "Panabo City",
+        "Samal City",
+        "San Isidro",
+        "Santo Tomas",
+        "Tagum City",
+        "Talaingod"
+    ],
+    "Davao del Sur": [
+        "Bansalan",
+        "Davao City",
+        "Digos City",
+        "Hagonoy",
+        "Kiblawan",
+        "Magsaysay",
+        "Malalag",
+        "Matanao",
+        "Padada",
+        "Santa Cruz",
+        "Sulop"
+    ],
+    "Davao Occidental": [
+    	"Don Marcelino",
+    	"Jose Abad Santos",
+    	"Malita",
+		"Santa Maria",
+		"Sarangani"
+    ],
+    "Davao Oriental": [
+        "Baganga",
+        "Banaybanay",
+        "Boston",
+        "Caraga",
+        "Cateel",
+        "Governor Generoso",
+        "Lupon",
+        "Manay",
+        "Mati City",
+        "San Isidro",
+        "Tarragona"
+    ]
+}
