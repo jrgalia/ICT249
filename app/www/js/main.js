@@ -1,5 +1,7 @@
 Parse.initialize(PARSE_APP.ID, PARSE_APP.KEY);
 var Politician = Parse.Object.extend('Politician');
+var Rating = Parse.Object.extend('Rating');
+
 
 function listItem(id, img, name, position, address) {
 	//TODO change profile.png
@@ -67,6 +69,50 @@ function loadUserProfile() {
 		$('#user-profile-region').val(user.get('region'));
 		$('#user-profile-region').trigger('change', [user.get('province'), user.get('town')]);
 	}
+}
+
+
+function findRating(ratings, user, year, quarter) {
+	for (var i = 0; i < ratings.length; i++) {
+		if (ratings[i].user === user && ratings[i].year === year && ratings[i].quarter === quarter) {
+			return(i);
+		}
+	}
+	return -1;
+}
+
+
+function loadRate() {
+	var objectId = $('#panel-rate-politician').data('objectId');	//politician ID
+	var userName = Parse.User.current().getUsername();
+
+	var date = new Date();
+	var year = date.getFullYear();
+	var quarter = Math.floor((date.getMonth() + 3) / 3);
+	
+	var query = new Parse.Query(Rating);
+    query.equalTo('politician', objectId);
+    
+    query.first({
+    	success: function(rating) {
+    		if (rating !== undefined) {
+    			var ratings = rating.get('ratings'); 
+    			var i = findRating(ratings, userName, year, quarter);
+    			if (i !== -1) {
+    				$('#rate-politician-rate').val(ratings[i].rate);
+    				$('#rate-politician-comment').val(ratings[i].comment);
+    				return;
+    			}
+    		}
+    		
+    		//TODO initial value of rate
+			$('#rate-politician-rate').val('');
+    		$('#rate-politician-comment').val('');
+    	},
+    	error: function(error) {
+    		navigator.notification.alert(error.message, null, 'Error');
+    	}
+    });
 }
 
 
@@ -169,6 +215,7 @@ $(document).ready(function() {
 			        success: function (user) {
 			           $.ui.loadContent('#panel-home', false, false);
 			        }, error: function(user, error) {
+			        	console.log(error.message);
 			    		navigator.notification.alert(error.message, null, 'Error');
 			        }
 				});
@@ -250,6 +297,7 @@ $(document).ready(function() {
 	$('.profile-list').on('click', 'a', function(e){
 		e.preventDefault();
 		var objectId = $(this).data('objectId');
+		$('#panel-politician-profile').data('objectId', objectId);
 
 		var query = new Parse.Query(Politician);
 		query.get(objectId, {
@@ -310,6 +358,96 @@ $(document).ready(function() {
 				navigator.notification.alert(error.message, null, 'Error');
 			}
 		});
+	});
+	
+	
+	$('a.rate').on('click', function(e) {
+		e.preventDefault();
+		var objectId = $('#panel-politician-profile').data('objectId');
+		$('#panel-rate-politician').data('objectId', objectId);
+		$.ui.loadContent('#panel-rate-politician', false, false, 'pop');
+	});
+	
+	
+	$('#rate-politician-submit').on('click', function(e) {
+		e.preventDefault()
+		var objectId = $('#panel-rate-politician').data('objectId');
+		var rate = parseInt($('#rate-politician-rate').val(), 10);
+		var comment = $('#rate-politician-comment').val();
+
+		if ( rate < 1 || rate > 10) {
+			navigator.notification.alert('rate must be 1-10', null, 'Error');
+			return;
+		}
+		if (comment.length === 0 || !comment.trim()) {
+			navigator.notification.alert('comment is required', null, 'Error');
+			return;
+		}
+		
+		var user = Parse.User.current();
+		
+		var date = new Date();
+		var year = date.getFullYear();
+		var quarter = Math.floor((date.getMonth() + 3) / 3);
+
+		
+		var query = new Parse.Query(Rating);
+	    query.equalTo('politician', objectId);
+	    query.first({
+	    	success: function(rating) {
+	    		if (rating !== undefined) {
+	    			var ratings = rating.get('ratings'); 
+	    			var i = findRating(ratings, user.getUsername(), year, quarter);
+	    			if (i !== -1) {
+	    				ratings[i].updatedAt = new Date();
+	    				ratings[i].rate = rate;
+	    				ratings[i].comment = comment;
+	    				rating.set('ratings', ratings);
+	    			} else {
+	    				rating.addUnique('ratings', {
+	    					user:user.getUsername(), year:year, quarter:quarter, 
+	    					rate:rate, comment:comment, createdAt:new Date(), 
+	    					updatedAt:new Date()});
+	    			}
+	    			rating.save();
+	    			$.ui.hideModal('');
+	        		//TODO initial value of rate
+	    			$('#rate-politician-rate').val('');
+	        		$('#rate-politician-comment').val('');
+	    			return;
+	    		} else {
+	    			var rating = new Rating();
+	    			rating.set('politician', objectId);
+	    			rating.addUnique('ratings', {
+	    				user:user.getUsername(), year:year, quarter:quarter, 
+	    				rate:rate, comment:comment, createdAt:new Date(), 
+	    				updatedAt:new Date()});
+	    			rating.save(null, {
+	    				success: function(rating) {
+	    					console.log('saved');
+	    					$.ui.hideModal('');
+	    		    		//TODO initial value of rate
+	    					$('#rate-politician-rate').val('');
+	    		    		$('#rate-politician-comment').val('');
+	    				},
+	    				error: function(rating, error) {
+	    					console.log(error.message);
+	    					navigator.notification.alert(error.message, null, 'Error');
+	    				}
+	    			})
+	    		}
+	    		
+	    		//TODO initial value of rate
+				$('#rate-politician-rate').val('');
+	    		$('#rate-politician-comment').val('');
+	    	},
+	    	error: function(error) {
+	    		console.log(error.message);
+	    		navigator.notification.alert(error.message, null, 'Error');
+	    	}
+	    });
+
+		
 	});
 
 });

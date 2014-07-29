@@ -307,15 +307,19 @@
 					</div>
 					<hr/>
 					<div>
-					<a class="button" href="#panel-rate-politician">rate</a>
+					<a class="button rate" href="#">rate</a>
 					</div>
 				</div>
 			</div>
 					
 					
 			<!--rate-politician panel-->
-			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui">
-			<br/>
+			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui" data-index="-1">
+			<form>
+				<input id="rate-politician-rate" type="range" min="1" max="10"/>
+				<textarea id="rate-politician-comment" placeholder="comment"></textarea>
+				<input id="rate-politician-submit" type="submit" class="button" value="Rate Now"/>
+			</form>
 			</div>
 		</div>
 		
