@@ -28,7 +28,7 @@
         
         <!--<link rel="stylesheet" type="text/css" href="http://cdn.app-framework-software.intel.com/2.1/af.ui.css" />-->
 		<!--<link rel="stylesheet" type="text/css" href="http://cdn.app-framework-software.intel.com/2.1/icons.css" />-->
-		<link rel="stylesheet" type="text/css" href="css/af.ui.base.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/af.ui.base.css" />
 		<link rel="stylesheet" type="text/css" href="css/icons.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/icons.fa.css">
 		<link rel="stylesheet" type="text/css" href="css/icons.typcn.css">
@@ -42,6 +42,8 @@
 		
 		<script type="text/javascript" charset="utf-8" src="js/parse-1.2.19.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/key.js"></script>
+		<!-- <script src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
 		 
 		<script type="text/javascript" src="cordova.js"></script>
@@ -86,7 +88,7 @@
 			
 			
 			<!--login panel-->
-			<div id="panel-login" class="panel">
+			<div id="panel-login" class="panel" showLoading="true">
 				<header>
 					<h1>Login</h1>
 				</header>
@@ -165,10 +167,10 @@
 			</div>
 			
 			<!--my location panel-->
-			<div class="panel" id="panel-my-location" data-footer="footer-ui">
+			<div class="panel" id="panel-my-location" data-load="loadUMyLocation" data-footer="footer-ui">
 				<header>
 					<a id="backButton" class="button backButton">Back</a>
-					<h1>Iligan City, Lanao del Norte</h1>
+					<h1>My Location</h1>
 					<a id="menubadge" class="menuButton" href="#panel-settings"></a>					
 				</header>
 				<ul class="list profile-list">
@@ -306,6 +308,9 @@
 						<h3 id="panel-politician-profile-address"></h3>
 					</div>
 					<hr/>
+					<div id="panel-politician-ratings">
+					
+					</div>
 					<div>
 					<a class="button rate" href="#">rate</a>
 					</div>
@@ -316,7 +321,7 @@
 			<!--rate-politician panel-->
 			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui" data-index="-1">
 			<form>
-				<input id="rate-politician-rate" type="range" min="1" max="10"/>
+				<input id="rate-politician-rate" type="range" min="1" max="5"/>
 				<textarea id="rate-politician-comment" placeholder="comment"></textarea>
 				<input id="rate-politician-submit" type="submit" class="button" value="Rate Now"/>
 			</form>
