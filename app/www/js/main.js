@@ -477,7 +477,7 @@ $(document).ready(function() {
 				q.equalTo("politician", objectId);
 				q.first({
 					success: function(rating) {
-						console.log('success:' + JSON.stringify(rating));
+						//console.log('success:' + JSON.stringify(rating));
 						
 						if (rating !== undefined) {
 							var ratings = rating.get('ratings');

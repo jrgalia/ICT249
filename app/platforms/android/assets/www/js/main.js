@@ -155,25 +155,8 @@ function loadRate() {
 }
 
 
-function geolocationSuccess(position) {
-    alert('Latitude: '          + position.coords.latitude          + '\n' +
-          'Longitude: '         + position.coords.longitude         + '\n' +
-          'Altitude: '          + position.coords.altitude          + '\n' +
-          'Accuracy: '          + position.coords.accuracy          + '\n' +
-          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-          'Heading: '           + position.coords.heading           + '\n' +
-          'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');
-}
-
-
-
 function loadUMyLocation() {
-	console.log('start loadUMyLocation');
-	
-	//navigator.geolocation.getCurrentPosition(geolocationSuccess);
-
-	
+	$.ui.showMask(' ');
 	navigator.geolocation.getCurrentPosition(function(position) {
 		
 		var latitude = position.coords.latitude;
@@ -181,26 +164,66 @@ function loadUMyLocation() {
 		var geocoder = new google.maps.Geocoder();
 		
 		var yourLocation = new google.maps.LatLng(latitude, longitude);
-		console.log('your location:' + yourLocation);
 		geocoder.geocode({"latLng": yourLocation }, function (results, status) {
 			if(status == google.maps.GeocoderStatus.OK) {
 				if(results[0]) {
-					var town = getTown(results[0]["address_components"]);
-					var province = getProvince(results[0]["address_components"]);
-					alert(town +', ' +province);
-					console.log('town: ' + town);
-					console.log('province: ' + province);
+					var town = getTown(results[0]['address_components']);
+					var province = getProvince(results[0]['address_components']);
+					
+					//compound query
+					var q1 = new Parse.Query(Politician);
+				    q1.equalTo('province', province);
+				    q1.equalTo('town', town);
+				    
+				    var q2 = new Parse.Query(Politician);
+				    q2.equalTo('province', province);
+				    if (town.indexOf('City') > -1) {
+				    	q2.equalTo('town', town.replace(' City', ''));
+				    } else {
+				    	q2.equalTo('town', town + ' City');
+				    }
+				    
+					var query = Parse.Query.or(q1, q2);				    
+				    query.find({
+				    	success: function(results) {				    		
+				    		//sort by position
+				    		var rank = {"Mayor":1, "Vice-Mayor":2, "Councilor":3};
+				    		results.sort(function(x, y) {
+				    			if(rank[x.get('position')] < rank[y.get('position')])
+				    				return -1;
+				    			if(rank[x.get('position')] > rank[y.get('position')])
+				    				return 1;
+				    			return 0;
+				    		});
+				    		
+				    		//update list
+				    		var output = [];	    		
+				    		for(var i=0; i<results.length; i++) {
+				    			var object = results[i];
+				    			var name = object.get('first_name') + ' ' + object.get('last_name');
+				    			//TODO change img
+					    		var location = object.get('town') + ', ' + object.get('province');
+				    			var html = listItem(object.id, 'img', name, object.get('position'), location);
+				    			output.push(html);
+				    		}
+				    		$('#panel-my-location .profile-list').html(output.join(''));
+				    		$.ui.hideMask();
+				    	},
+				    	error: function(error) {
+					    	alertError(error.message);
+				    	}
+				    });
+				    
 				} else {
-					error("Google did not return any results.");
+					alertError('Google did not return any results.');
 				}
 			} else {
-			      error("Reverse Geocoding failed due to: " + status);
+					alertError('Reverse Geocoding failed due to: ' + status);
 				}
 			});
 		}, function(error) {
-			console.log('error:' + error.message);
+			alertError(error.message);
 		});
-	console.log('end loadUMyLocation');
 }
 
 
@@ -454,7 +477,7 @@ $(document).ready(function() {
 				q.equalTo("politician", objectId);
 				q.first({
 					success: function(rating) {
-						console.log('success:' + JSON.stringify(rating));
+						//console.log('success:' + JSON.stringify(rating));
 						
 						if (rating !== undefined) {
 							var ratings = rating.get('ratings');

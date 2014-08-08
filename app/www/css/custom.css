@@ -13,3 +13,9 @@
 #afui .profile-list h2, #afui .profile-list h3{
 	margin-bottom: 0px;
 }
+
+hr {
+	margin-top: 15px;
+	border: 0;
+	border-bottom: 1px solid gray;
+}
