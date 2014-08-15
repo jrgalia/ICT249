@@ -1,6 +1,7 @@
 Parse.initialize(PARSE_APP.ID, PARSE_APP.KEY);
 var Politician = Parse.Object.extend('Politician');
 var Rating = Parse.Object.extend('Rating');
+var Photo = Parse.Object.extend('Photo');
 
 
 function alertError(message) {
@@ -26,10 +27,9 @@ function getTown(arr) {
 
 
 function listItem(id, img, name, position, address) {
-	//TODO change profile.png
-	img = 'img/profile.png';
+	img = img || 'img/profile.png';
 	var output = '<li><a href="#" data-objectId="' + id + '">' +
-		'<img src="' + img + '" alt="' + name + '" />' +
+		'<img height="100" src="' + img + '" alt="' + name + '" />' +
 		'<h2>' + position + ' ' + name + '</h2>' +
 		'<h3>' + address + '</h3>' +
 		'</a></li>';
@@ -80,8 +80,11 @@ function loadHomePage() {
     		for(var i=0; i<results.length; i++) {
     			var object = results[i];
     			var name = object.get('first_name') + ' ' + object.get('last_name');
-    			//TODO change img
-    			var html = listItem(object.id, 'img', name, object.get('position'), location);
+    			var img = null;
+    			var photo = results[i].get('photo');
+    			if (photo !== undefined)
+	    			img = photo._url;
+    			var html = listItem(object.id, img, name, object.get('position'), location);
     			output.push(html);
     		}
     		$('#panel-home .profile-list').html(output.join(''));
@@ -201,9 +204,12 @@ function loadUMyLocation() {
 				    		for(var i=0; i<results.length; i++) {
 				    			var object = results[i];
 				    			var name = object.get('first_name') + ' ' + object.get('last_name');
-				    			//TODO change img
 					    		var location = object.get('town') + ', ' + object.get('province');
-				    			var html = listItem(object.id, 'img', name, object.get('position'), location);
+				    			var img = null;
+				    			var photo = object.get('photo');
+				    			if (photo !== undefined)
+					    			img = photo._url;
+				    			var html = listItem(object.id, img, name, object.get('position'), location);
 				    			output.push(html);
 				    		}
 				    		$('#panel-my-location .profile-list').html(output.join(''));
@@ -244,6 +250,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			url: 'js/json/' + file + '.json',
 			success: function (data) {
+				console.log('data', data);
 				//iterate province;
 				var output = ['<option value="">--province--</option>'];
 		        $.each(data['province'], function(index, value){
@@ -368,7 +375,7 @@ $(document).ready(function() {
 		Parse.User.logIn(email, password, {
 	        success: function (user) {
 	        	$.ui.hideMask();
-	        	$.ui.loadContent('#panel-home', false, false);
+	        	$.ui.loadContent('#panel-home', true, false);
 	           
 	        }, error: function(user, error) {
 	        	$.ui.hideMask();
@@ -382,6 +389,7 @@ $(document).ready(function() {
 	$('#settings-logout').on('click', function(e) {
 		e.preventDefault();
 		Parse.User.logOut();
+		navigator.app.exitApp();
 		$.ui.loadContent('#panel-login', false, false);
 	});
 
@@ -432,8 +440,12 @@ $(document).ready(function() {
 	    		for(var i=0; i<results.length; i++) {
 	    			var object = results[i];
 	    			var name = object.get('first_name') + ' ' + object.get('last_name');
-	    			//TODO change img
-	    			var html = listItem(object.id, 'img', name, object.get('position'), address);
+
+	    			var img = null;
+	    			var photo = object.get('photo');
+	    			if (photo !== undefined)
+		    			img = photo._url;
+	    			var html = listItem(object.id, img, name, object.get('position'), address);
 	    			output.push(html);
 	    		}
 	    		$('#panel-search-result .profile-list').html(output.join(''));
@@ -456,7 +468,10 @@ $(document).ready(function() {
 		var query = new Parse.Query(Politician);
 		query.get(objectId, {
 			success: function(object) {
-				//TODO update img src
+    			var photo = object.get('photo');
+    			if (photo !== undefined)
+	    			$('#panel-politician-profile-photo').attr('src', photo._url);
+    			
 				var position = object.get('position');
 				var firstName = object.get('first_name');
 				var lastName = object.get('last_name');
@@ -474,7 +489,7 @@ $(document).ready(function() {
 				console.log('here...');
 				var q = new Parse.Query(Rating);
 				console.log(objectId);
-				q.equalTo("politician", objectId);
+				q.equalTo('politician', objectId);
 				q.first({
 					success: function(rating) {
 						//console.log('success:' + JSON.stringify(rating));

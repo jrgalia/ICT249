@@ -79,7 +79,7 @@
 					<img src="img/voice.png"
 						style="display: block; margin-left: auto; margin-right: auto; height:30%;"/>
 					
-					<a class="button block" href="#panel-login">Login</a>
+					<a class="button block" href="#panel-login" data-transition="pop">Login</a>
 					<a class="button block" href="#panel-signup">Sign Up</a>
 				</div>
 				<footer>
@@ -303,7 +303,7 @@
 				<div>
 					<div class="grid" style="text-align:center;">
 						<div class="col2">
-							<img src="img/profile.png" 
+							<img id="panel-politician-profile-photo" src="img/profile.png" 
 								style="display: block; margin-left: auto; margin-right: auto; width:100%; max-width:300px;"/>
 						</div>
 						<div class="col2">
@@ -326,9 +326,35 @@
 			<!--rate-politician panel-->
 			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui" data-index="-1">
 			<form>
+				<br/><br/>
 				<input id="rate-politician-rate" type="range" min="1" max="5"/>
 				<textarea id="rate-politician-comment" placeholder="comment"></textarea>
 				<input id="rate-politician-submit" type="submit" class="button" value="Rate Now"/>
+				
+				<!-- 
+				<fieldset class="rating">
+    <legend>Please rate:</legend>
+    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+</fieldset> -->
+
+  <div class="button-grouped">
+    <a class="button">1 </a>
+    <a class="button">2 </a>
+    <a class="button red">3 </a>
+	<a class="button">4 </a>
+    <a class="button">5 </a>    
+  </div>
+  
+  <div class="button-grouped">
+    <input type="radio"  name="rate" id="star1" value="1"/><label class="button"  for="star1" title="Rocks!">1 star</label>
+    <input type="radio" name="rate"  id="star2" value="2"/><label class="button" for="star2" title="Rocks!">2 star</label>
+    <input type="radio" name="rate"  id="star3" value="2"/><label class="button" for="star3" title="Rocks!">3 star</label>
+  </div>
+  
 			</form>
 			</div>
 		</div>

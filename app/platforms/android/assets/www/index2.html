@@ -1,34 +1,15 @@
-#afui h2 {
-	display: inline;
-}
-.profile-list {
-	text-align: center;
-}
-.profile-list img{
-	display: block;
-	margin: auto;
-	max-height: 100px;
-} 
+<!DOCTYPE html>
+<html>
 
-#afui .profile-list h2, #afui .profile-list h3{
-	margin-bottom: 0px;
-}
-
-hr {
-	margin-top: 15px;
-	border: 0;
-	border-bottom: 1px solid gray;
-}
-
-
-.rating {
+<head>
+	<style type="text/css">
+	.rating {
     float:left;
 }
 
 /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
    follow these rules. Every browser that supports :checked also supports :not(), so
    it doesn’t make the test unnecessarily selective */
-   /*
 .rating:not(:checked) > input {
     position:absolute;
     top:-9999px;
@@ -76,4 +57,17 @@ hr {
     position:relative;
     top:2px;
     left:2px;
-}*/
+}
+	</style>
+</head>
+<body>
+				<fieldset class="rating">
+    <legend>Please rate:</legend>
+    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+</fieldset>
+</body>
+</html>
