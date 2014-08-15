@@ -592,6 +592,13 @@ $(document).ready(function() {
 	});
 	
 	
+	$('#rate a').on('click', function(e) {
+		e.preventDefault();
+		$('#rate .red').removeClass('red');
+		$(this).addClass('red');
+	});
+	
+	
 	$('#rate-politician-submit').on('click', function(e) {
 		e.preventDefault()
 		var objectId = $('#panel-rate-politician').data('objectId');
