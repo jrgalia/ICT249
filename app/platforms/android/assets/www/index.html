@@ -71,7 +71,7 @@
 		<div id="content">
 			
 			<!--index panel-->
-			<div id="panel-index" class="panel" data-load="loadIndex" selected="true" >
+			<div id="panel-index" class="panel" data-load="loadIndex">
 				<header>
 					<h1>My Politiko</h1>
 				</header>
@@ -79,7 +79,7 @@
 					<img src="img/voice.png"
 						style="display: block; margin-left: auto; margin-right: auto; height:30%;"/>
 					
-					<a class="button block" href="#panel-login" data-transition="pop">Login</a>
+					<a class="button block" href="#panel-login">Login</a>
 					<a class="button block" href="#panel-signup">Sign Up</a>
 				</div>
 				<footer>
@@ -88,7 +88,7 @@
 			
 			
 			<!--login panel-->
-			<div id="panel-login" class="panel" showLoading="true">
+			<div id="panel-login" class="panel">
 				<header>
 					<h1>Login</h1>
 				</header>
@@ -157,7 +157,7 @@
 			
 		
 			<!--home panel-->		
-			<div id="panel-home" class="panel" data-load="loadHomePage" data-footer="footer-ui">
+			<div id="panel-home" class="panel" data-load="loadHomePage" data-footer="footer-ui" selected="true">
 				<header>
 					<h1>My Politiko</h1>
 					<a id="menubadge" class="menuButton" href="#panel-settings"></a>
@@ -165,6 +165,7 @@
 				<ul class="list profile-list">					
 				</ul>
 			</div>
+			
 			
 			<!--my location panel-->
 			<div class="panel" id="panel-my-location" data-load="loadUMyLocation" data-footer="footer-ui">
@@ -313,35 +314,42 @@
 						</div>
 					</div>
 					<hr/>
-					<div id="panel-politician-ratings">
-					
-					</div>
 					<div>
-					<a class="button rate" href="#">rate</a>
+						<a class="button rate" href="#">rate</a>
+						<a id="rate-all" class="button" href="#">view all ratings</a>
 					</div>
+					<ul id="panel-politician-ratings" class="list">
+					
+					</ul>
 				</div>
 			</div>
 					
 					
 			<!--rate-politician panel-->
 			<div id="panel-rate-politician" class="panel" data-load="loadRate" data-modal="true" data-footer="footer-ui" data-index="-1">
-			<form>
-			
-				<!-- 
-				<input id="rate-politician-rate" type="range" min="1" max="5"/>
-			 	-->
-				<div id="rate" class="button-grouped">
-				    <a href="#" class="button">1</a>
-				    <a href="#" class="button">2</a>
-				    <a href="#" class="button red">3</a>
-					<a href="#" class="button">4</a>
-				    <a href="#" class="button">5</a>    
+				<div>
+					<form>
+						<div id="rate" class="button-grouped">
+						    <a href="#" class="button">1</a>
+						    <a href="#" class="button">2</a>
+						    <a href="#" class="button">3</a>
+							<a href="#" class="button">4</a>
+						    <a href="#" class="button">5</a>    
+						</div>
+					
+						<textarea id="rate-politician-comment" placeholder="comment"></textarea>
+						<input id="rate-politician-submit" type="submit" class="button" value="Rate Now"/>
+		  
+					</form>
 				</div>
+			</div>
 			
-				<textarea id="rate-politician-comment" placeholder="comment"></textarea>
-				<input id="rate-politician-submit" type="submit" class="button" value="Rate Now"/>
-  
-			</form>
+			
+			<!-- rate-all panel -->
+			<div id="panel-rate-all" class="panel" data-load="loadRateAll" data-modal="true" data-footer="footer-ui">
+				<div id="rate-list">
+					
+				</div>
 			</div>
 		</div>
 		

@@ -5,6 +5,7 @@ var Photo = Parse.Object.extend('Photo');
 
 
 function alertError(message) {
+	console.error(message);
 	$.ui.popup(message);
 	$.ui.hideMask();
 }
@@ -37,11 +38,46 @@ function listItem(id, img, name, position, address) {
 	return output;
 }
 
+
+function aggregateRating(rating) {
+	var ratings = rating.get('ratings');
+	var i = 0;
+	var table = {};
+	var count = {};
+	for(; i<ratings.length; i++) {
+		var key = ratings[i]['year'] + '-' + ratings[i]['quarter'];
+		if (table.hasOwnProperty(key)) {
+			table[key] += ratings[i]['rate'];
+			count[key]++;
+		} else {
+			table[key] = ratings[i]['rate'];
+			count[key] = 1;
+		}
+	}
+	var keys = Object.keys(table);
+	keys.sort();
+
+	var html = '';
+	var ordinal = ['', '1st', '2nd', '3rd', '4th'];
+	for(i=keys.length-1; i>=0; i--) {
+		var temp = keys[i].split('-');
+		var year = temp[0];
+		var quarter = temp[1];
+		var rate = table[keys[i]]
+		html += '<li>' + year + ' ' + ordinal[quarter] + ' quarter: ' +
+			'<input type="button" class="button red" value="' + (rate/count[keys[i]]).toFixed(1) + '" />' +
+			'</li>';
+	}
+	
+	$('#panel-politician-ratings').html(html);
+}
+
+
 //when index is loaded
 function loadIndex() {
 	var user = Parse.User.current();
 	if (user !== null) {
-		$.ui.loadContent('#panel-home', false, false);
+		$.ui.loadContent('#panel-home', true, false);
 	}
 }
 
@@ -49,8 +85,9 @@ function loadIndex() {
 //when panel-home is loaded
 function loadHomePage() {
 	var user = Parse.User.current();
+	
 	if (user === null){
-		$.ui.loadContent('#panel-login', false, false);
+		$.ui.loadContent('#panel-index', true, false);
 		return;
 	}
 	
@@ -123,6 +160,8 @@ function findRating(ratings, user, year, quarter) {
 
 function loadRate() {
 	$.ui.showMask(' ');
+	$('#rate a.red').removeClass('red');
+	$('#rate-politician-comment').val('');
 	var objectId = $('#panel-rate-politician').data('objectId');	//politician ID
 	var userName = Parse.User.current().getUsername();
 
@@ -139,15 +178,14 @@ function loadRate() {
     			var ratings = rating.get('ratings'); 
     			var i = findRating(ratings, userName, year, quarter);
     			if (i !== -1) {
-    				$('#rate-politician-rate').val(ratings[i].rate);
+    				$('#rate a:nth-child('+ratings[i].rate+')').addClass('red');
     				$('#rate-politician-comment').val(ratings[i].comment);
     				$.ui.hideMask();
     				return;
     			}
     		}
     		
-    		//TODO initial value of rate
-			$('#rate-politician-rate').val('');
+    		$('#rate a:nth-child(3)').addClass('red');
     		$('#rate-politician-comment').val('');
     		$.ui.hideMask();
     	},
@@ -157,6 +195,36 @@ function loadRate() {
     });
 }
 
+
+function loadRateAll() {
+	$.ui.showMask(' ');
+	$('#rate-list').empty();
+	var objectId = $('#panel-rate-all').data('objectId');	//politician ID
+
+
+	var query = new Parse.Query(Rating);
+    query.equalTo('politician', objectId);
+    
+    query.first({
+    	success: function(rating) {
+    		if (rating !== undefined) {
+    			var ratings = rating.get('ratings'); 
+    			var output = [];
+    			for(var i=0; i<ratings.length; i++) {
+    				
+    				var html = '<input type="button" class="button red" value="' + ratings[i].rate+ '" />' +  
+    					'<p>' + ratings[i].comment.replace(/(?:\r\n|\r|\n)/g, '<br/>') + '</p><hr/>';
+	    			output.push(html);
+    			}
+    			$('#rate-list').html(output.join(''));
+    		}
+    		$.ui.hideMask();
+    	},
+    	error: function(error) {
+    		alertError(error.message);
+    	}
+    });
+}
 
 function loadUMyLocation() {
 	$.ui.showMask(' ');
@@ -234,6 +302,7 @@ function loadUMyLocation() {
 
 
 $(document).ready(function() {
+	document.addEventListener("offline", function(){ alert("You're offline") }, false);
 	
 	//region dropdown
 	$('select.region').on('change', function(e, province, town) {
@@ -244,13 +313,13 @@ $(document).ready(function() {
 		//empty other dropdown
 		$province.empty();
 		$town.empty();
+		$province.append('<option value="">--province--</option>');
 		$town.append('<option value="">--town--</option>');
 		
 		$.ajax({
 			dataType: 'json',
 			url: 'js/json/' + file + '.json',
 			success: function (data) {
-				console.log('data', data);
 				//iterate province;
 				var output = ['<option value="">--province--</option>'];
 		        $.each(data['province'], function(index, value){
@@ -376,9 +445,7 @@ $(document).ready(function() {
 	        success: function (user) {
 	        	$.ui.hideMask();
 	        	$.ui.loadContent('#panel-home', true, false);
-	           
 	        }, error: function(user, error) {
-	        	$.ui.hideMask();
 	        	alertError(error.message);
 	        }
 		})
@@ -389,8 +456,8 @@ $(document).ready(function() {
 	$('#settings-logout').on('click', function(e) {
 		e.preventDefault();
 		Parse.User.logOut();
-		navigator.app.exitApp();
 		$.ui.loadContent('#panel-login', false, false);
+		navigator.app.exitApp();
 	});
 
 	
@@ -471,6 +538,8 @@ $(document).ready(function() {
     			var photo = object.get('photo');
     			if (photo !== undefined)
 	    			$('#panel-politician-profile-photo').attr('src', photo._url);
+    			else
+    				$('#panel-politician-profile-photo').attr('src', 'img/profile.png');
     			
 				var position = object.get('position');
 				var firstName = object.get('first_name');
@@ -478,7 +547,7 @@ $(document).ready(function() {
 				var nickName = object.get('nick_name');
 				
 				var completeName = position + ' ' + firstName + ' ';
-				if (firstName != nickName && nickName !== undefined)
+				if (firstName != nickName && nickName.length > 0 && nickName !== undefined)
 					completeName += '"' + nickName + '" ';
 				completeName += lastName;
 				
@@ -486,50 +555,13 @@ $(document).ready(function() {
 				$('#panel-politician-profile-name').text(completeName);
 				$('#panel-politician-profile-address').text(address);
 				
-				console.log('here...');
 				var q = new Parse.Query(Rating);
-				console.log(objectId);
 				q.equalTo('politician', objectId);
 				q.first({
 					success: function(rating) {
-						//console.log('success:' + JSON.stringify(rating));
-						
+
 						if (rating !== undefined) {
-							var ratings = rating.get('ratings');
-							console.log('s:' +ratings);
-							var sum = 0;
-							var i = 0;
-							
-							var table = {};
-							var count = {};
-							for(; i<ratings.length; i++) {
-								var key = ratings[i]['year'] + '-' + ratings[i]['quarter'];
-								console.log('key:' + key);
-								if (table.hasOwnProperty(key)) {
-									table[key] += ratings[i]['rate'];
-									count[key]++;
-								} else {
-									table[key] = ratings[i]['rate'];
-									count[key] = 1;
-								}
-								console.log('table:' + table);
-								console.log(JSON.stringify(ratings[i]));
-							}
-							var keys = Object.keys(table);
-							keys.sort();
-							console.log('sorted keys:' + keys);
-							var html = '';
-							var ordinal = ['', '1st', '2nd', '3rd', '4th'];
-							for(i=keys.length-1; i>=0; i--) {
-								var temp = keys[i].split('-');
-								var year = temp[0];
-								var quarter = temp[1];
-								var rate = table[keys[i]]
-								console.log('zzz:' +table[keys[i]]);
-								html += '<p>' + year + ' ' + ordinal[quarter] + ' quarter: <b>' + (rate/count[keys[i]]) + '/5</b>' + '</p>';
-							}
-							
-							$('#panel-politician-ratings').html(html);
+							aggregateRating(rating);
 						}
 						$.ui.hideMask();
 					},
@@ -537,7 +569,6 @@ $(document).ready(function() {
 						alertError(error.message);
 					}
 				});
-				console.log('done...');
 				$.ui.loadContent('#panel-politician-profile', false, false);
 			},
 			error: function(object, error) {
@@ -575,7 +606,6 @@ $(document).ready(function() {
 		var user = Parse.User.current();
 		user.save({display_name:displayName, region:region, province:province, town:town}, {
 			success: function (user) {
-				console.log('successfully saved');
 				$.ui.hideMask();
 			}, error: function(user, error) {
 				alertError(error.message);
@@ -584,11 +614,21 @@ $(document).ready(function() {
 	});
 	
 	
+	//rate button
 	$('a.rate').on('click', function(e) {
 		e.preventDefault();
 		var objectId = $('#panel-politician-profile').data('objectId');
 		$('#panel-rate-politician').data('objectId', objectId);
 		$.ui.loadContent('#panel-rate-politician', false, false, 'pop');
+	});
+	
+	
+	//rate-all button
+	$('#rate-all').on('click', function(e) {
+		e.preventDefault();
+		var objectId = $('#panel-politician-profile').data('objectId');
+		$('#panel-rate-all').data('objectId', objectId);
+		$.ui.loadContent('#panel-rate-all', false, false, 'pop');
 	});
 	
 	
@@ -602,7 +642,7 @@ $(document).ready(function() {
 	$('#rate-politician-submit').on('click', function(e) {
 		e.preventDefault()
 		var objectId = $('#panel-rate-politician').data('objectId');
-		var rate = parseInt($('#rate-politician-rate').val(), 10);
+		var rate = parseInt($('#rate .red').text(), 10);
 		var comment = $('#rate-politician-comment').val();
 
 		if ( rate < 1 || rate > 5) {
@@ -639,11 +679,12 @@ $(document).ready(function() {
 	    					rate:rate, comment:comment, createdAt:new Date(), 
 	    					updatedAt:new Date()});
 	    			}
-	    			rating.save();
+	    			rating.save(null, {
+	    				success:function(rating){
+	    					aggregateRating(rating);
+	    				}
+	    			});
 	    			$.ui.hideModal('');
-	        		//TODO initial value of rate
-	    			$('#rate-politician-rate').val('');
-	        		$('#rate-politician-comment').val('');
 	    			return;
 	    		} else {
 	    			var rating = new Rating();
@@ -654,21 +695,14 @@ $(document).ready(function() {
 	    				updatedAt:new Date()});
 	    			rating.save(null, {
 	    				success: function(rating) {
-	    					console.log('saved');
-	    					$.ui.hideModal('');
-	    		    		//TODO initial value of rate
-	    					$('#rate-politician-rate').val('');
-	    		    		$('#rate-politician-comment').val('');
+	    					aggregateRating(rating);
 	    				},
 	    				error: function(rating, error) {
 	    					alertError(error.message);
 	    				}
-	    			})
+	    			});
+					$.ui.hideModal('');
 	    		}
-	    		
-	    		//TODO initial value of rate
-				$('#rate-politician-rate').val('');
-	    		$('#rate-politician-comment').val('');
 	    	},
 	    	error: function(error) {
 	    		alertError(error.message);

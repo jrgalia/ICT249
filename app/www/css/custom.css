@@ -24,3 +24,15 @@ hr {
 .rating {
     float:left;
 }
+
+#panel-politician-ratings li{
+	padding: 0 10px !important;
+}
+
+#panel-politician-ratings .button{
+	vertical-align: middle;
+}
+
+textarea{
+	min-height: 150px;
+}
