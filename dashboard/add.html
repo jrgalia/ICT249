@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>My Politiko</title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="container">
+			<h1>Add</h1>
+			
+			<div class="row">
+				<div class="col-md-3">
+
+				</div>
+
+				<div class="col-md-8">
+					<form class="form-horizontal" role="form" readonly="true">
+						<div class="form-group">
+							<label for="position" class="col-sm-2 control-label">Position</label>
+							<div class="col-sm-10">
+								<select id="position">
+									<option value="">---</option>
+									<option value="Councilor">Councilor</option>
+									<option value="Vice-Mayor">Vice-Mayor</option>
+									<option value="Mayor">Mayor</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstName" class="col-sm-2 control-label">First Name</label>
+							<div class="col-sm-10">
+								<input id="firstName" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastName" class="col-sm-2 control-label">Last Name</label>
+							<div class="col-sm-10">
+								<input id="lastName" type="text" class="form-control">
+							</div>
+						</div>						
+						<div class="form-group">
+							<label for="nickName" class="col-sm-2 control-label">Nick Name</label>
+							<div class="col-sm-10">
+								<input id="nickName" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="middleName" class="col-sm-2 control-label">Middle Name</label>
+							<div class="col-sm-10">
+								<input id="middleName" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="region" class="col-sm-2 control-label">Region</label>
+							<div class="col-sm-10">
+								<select id="region" style="width:200px;">
+									<option value="">--region--</option>
+									<option value="CAR" data-file="car">CAR</option>
+									<option value="Ilocos Region" data-file="reg1">Ilocos Region</option>
+									<option value="Cagayan Valley" data-file="reg2">Cagayan Valley</option>
+									<option value="Central Luzon" data-file="reg3">Central Luzon</option>
+									<option value="Metro Manila" data-file="ncr">Metro Manila</option>
+									<option value="CALABARZON" data-file="reg4a">CALABARZON</option>
+									<option value="MIMAROPA" data-file="reg4b">MIMAROPA</option>
+									<option value="Bicol" data-file="reg5">Bicol</option>
+									<option value="Western Visayas" data-file="reg6">Western Visayas</option>
+									<option value="Central Visayas" data-file="reg7">Central Visayas</option>
+									<option value="Eastern Visayas" data-file="reg8">Eastern Visayas</option>
+									<option value="Zamboanga Peninsula" data-file="reg9">Zamboanga Peninsula</option>
+									<option value="Northern Mindanao" data-file="reg10">Northern Mindanao</option>
+									<option value="Davao Region" data-file="reg11">Davao Region</option>
+									<option value="SOCCSKSARGEN" data-file="reg12">SOCCSKSARGEN</option>
+									<option value="CARAGA" data-file="reg13">CARAGA</option>
+									<option value="ARMM" data-file="armm">ARMM</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="province" class="col-sm-2 control-label">Province</label>
+							<div class="col-sm-10">
+								<select id="province" style="width:200px;">
+									<option value="">--province--</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="town" class="col-sm-2 control-label">Town</label>
+							<div class="col-sm-10">
+								<select id="town" style="width:250px;">
+									<option value="">--town--</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<input id="add" class="btn btn-default" type="button" value="save"/>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="bootstrap-3.2.0/js/bootstrap.min.js"></script>
+		<script src="js/parse-1.2.19.min.js"></script>		
+		<script src="js/function.js"></script>
+		<script src="js/key.js"></script>		
+		<script src="js/main.js"></script>		
+		<script src="js/add.js"></script>
+	</body>
+</html>

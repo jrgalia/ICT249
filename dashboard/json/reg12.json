@@ -1,0 +1,66 @@
+{
+    "province": [
+        "Cotabato",
+        "Sarangani",
+        "South Cotabato",
+        "Sultan Kudarat"
+    ],
+    
+    "Cotabato": [
+        "Alamada",
+        "Aleosan",
+        "Antipas",
+        "Arakan",
+        "Banisilan",
+        "Carmen",
+        "Kabacan",
+        "Kidapawan City",
+        "Libungan",
+        "Magpet",
+        "Makilala",
+        "Matalam",
+        "Midsayap",
+        "M'Lang",
+        "Pigkawayan",
+        "Pikit",
+        "President Roxas",
+        "Tulunan"
+    ],
+    "Sarangani": [
+        "Alabel",
+        "Glan",
+        "Kiamba",
+        "Maasim",
+        "Maitum",
+        "Malapatan",
+        "Malungon"
+    ],
+    "South Cotabato": [
+        "Banga",
+        "General Santos City",
+        "Koronadal City",
+        "Lake Sebu",
+        "Norala",
+        "Polomolok",
+        "Santo Niño",
+        "Surallah",
+        "Tampakan",
+        "Tantangan",
+        "T'Boli",
+        "Tupi"
+    ],
+    "Sultan Kudarat": [
+        "Bagumbayan",
+        "Columbio",
+        "Esperanza",
+        "Isulan",
+        "Kalamansig",
+        "Lambayong",
+        "Lebak",
+        "Lutayan",
+        "Palimbang",
+        "President Quirino",
+        "Senator Ninoy Aquino",
+        "Tacurong City"
+    ]         
+}
