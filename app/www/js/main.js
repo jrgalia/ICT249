@@ -302,7 +302,6 @@ function loadUMyLocation() {
 
 
 $(document).ready(function() {
-	document.addEventListener("offline", function(){ alert("You're offline") }, false);
 	
 	//region dropdown
 	$('select.region').on('change', function(e, province, town) {
@@ -570,6 +569,7 @@ $(document).ready(function() {
 					}
 				});
 				$.ui.loadContent('#panel-politician-profile', false, false);
+				$('.pressed').removeClass('pressed');
 			},
 			error: function(object, error) {
 				alertError(error.message);
