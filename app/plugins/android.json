@@ -11,6 +11,20 @@
                         {
                             "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
                         }
                     ]
                 }
@@ -22,6 +36,9 @@
             "PACKAGE_NAME": "ph.edu.msuiit.ict249"
         },
         "org.apache.cordova.console": {
+            "PACKAGE_NAME": "ph.edu.msuiit.ict249"
+        },
+        "org.apache.cordova.network-information": {
             "PACKAGE_NAME": "ph.edu.msuiit.ict249"
         }
     },

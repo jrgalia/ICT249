@@ -42,9 +42,31 @@
 		 
 		<script type="text/javascript" src="cordova.js"></script>
 		
+		<script type="text/javascript">
+		    function onLoad() {
+		        document.addEventListener('deviceready', onDeviceReady, false);
+		    }
+
+		    function onDeviceReady() {
+		        document.addEventListener('offline', onOffline, false);
+		    }
+	
+		    function onOffline() {
+		    	alertError(null, 'device went offline');
+		    }
+		    
+		    $(window).load(function() {
+		        onLoad();
+		    });
+		</script>
+		
     </head>
+    
     <body>
     
+    <script type="text/javascript">
+	    //app.initialize();
+	</script>
 
 	<div id="afui">
 		<div id="content">

@@ -4,7 +4,10 @@ var Rating = Parse.Object.extend('Rating');
 var Photo = Parse.Object.extend('Photo');
 
 
-function alertError(message) {
+function alertError(code, message) {
+	if (code === 100) {
+		message = 'Check your internet connection';
+	}
 	console.error(message);
 	$.ui.popup(message);
 	$.ui.hideMask();
@@ -128,7 +131,7 @@ function loadHomePage() {
     		$.ui.hideMask();
     	},
     	error: function(error) {
-	    	alertError(error.message);
+	    	alertError(error.code, error.message);
     	}
     });
 }
@@ -190,7 +193,7 @@ function loadRate() {
     		$.ui.hideMask();
     	},
     	error: function(error) {
-    		alertError(error.message);
+    		alertError(error.code, error.message);
     	}
     });
 }
@@ -221,7 +224,7 @@ function loadRateAll() {
     		$.ui.hideMask();
     	},
     	error: function(error) {
-    		alertError(error.message);
+    		alertError(error.code, error.message);
     	}
     });
 }
@@ -235,7 +238,7 @@ function loadUMyLocation() {
 		var geocoder = new google.maps.Geocoder();
 		
 		var yourLocation = new google.maps.LatLng(latitude, longitude);
-		geocoder.geocode({"latLng": yourLocation }, function (results, status) {
+		geocoder.geocode({'latLng': yourLocation }, function (results, status) {
 			if(status == google.maps.GeocoderStatus.OK) {
 				if(results[0]) {
 					var town = getTown(results[0]['address_components']);
@@ -284,25 +287,24 @@ function loadUMyLocation() {
 				    		$.ui.hideMask();
 				    	},
 				    	error: function(error) {
-					    	alertError(error.message);
+					    	alertError(error.code, error.message);
 				    	}
 				    });
 				    
 				} else {
-					alertError('Google did not return any results.');
+					alertError(null, 'Google did not return any results.');
 				}
 			} else {
-					alertError('Reverse Geocoding failed due to: ' + status);
+					alertError(null, 'Reverse Geocoding failed due to: ' + status);
 				}
 			});
 		}, function(error) {
-			alertError(error.message);
+			alertError(error.code, error.message);
 		});
 }
 
 
 $(document).ready(function() {
-	document.addEventListener("offline", function(){ alert("You're offline") }, false);
 	
 	//region dropdown
 	$('select.region').on('change', function(e, province, town) {
@@ -335,7 +337,7 @@ $(document).ready(function() {
 		        $.ui.hideMask();
 		    },
 		    error: function (request, status, error) {
-		    	alertError(request.responseTex);
+		    	alertError(status, request.responseTex);
 		    }
 		});
 	});
@@ -368,7 +370,7 @@ $(document).ready(function() {
 		        $.ui.hideMask();
 		    },
 		    error: function (request, status, error) {
-		    	alertError(request.responseText);
+		    	alertError(status, request.responseText);
 		    }
 		});
 	});
@@ -385,29 +387,29 @@ $(document).ready(function() {
 		var town = $('#signup-town').val();
 		
 		if (email.length === 0 || !email.trim()) {
-			alertError('email is required');
+			alertError(null, 'email is required');
 			return;
 		}
 		
 		if (password.length === 0 || !password.trim()) {
-			alertError('password is required');
+			alertError(null, 'password is required');
 			return;
 		}
 		
 		if (displayName.length === 0 || !displayName.trim()) {
-			alertError('display name is required');
+			alertError(null, 'display name is required');
 			return;
 		}
 		if (region.length === 0) {
-			alertError('region is required');
+			alertError(null, 'region is required');
 			return;
 		}
 		if (province.length === 0) {
-			alertError('province is required');
+			alertError(null, 'province is required');
 			return;
 		}
 		if (town.length === 0) {
-			alertError('town is required');
+			alertError(null, 'town is required');
 			return;
 		}
 		
@@ -418,7 +420,7 @@ $(document).ready(function() {
 			           $.ui.loadContent('#panel-home', false, false);
 			           $.ui.hideMask();
 			        }, error: function(user, error) {
-			        	alertError(error.message);
+			        	alertError(error.code, error.message);
 			        }
 				});
 		
@@ -433,11 +435,11 @@ $(document).ready(function() {
 		var password = $('#login-password').val();
 		
 		if (email.length === 0 || !email.trim()) {
-			alertError('email is required');
+			alertError(null, 'email is required');
 			return;
 		}
 		if (password.length === 0 || !password.trim()) {
-			alertError('password is required');
+			alertError(null, 'password is required');
 			return;
 		}
 		
@@ -446,7 +448,7 @@ $(document).ready(function() {
 	        	$.ui.hideMask();
 	        	$.ui.loadContent('#panel-home', true, false);
 	        }, error: function(user, error) {
-	        	alertError(error.message);
+	        	alertError(error.code, error.message);
 	        }
 		})
 	});
@@ -468,15 +470,15 @@ $(document).ready(function() {
 		var province = $('#search-province').val();
 		var town = $('#search-town').val();
 		if (region.length === 0) {
-			alertError('region is required');
+			alertError(null, 'region is required');
 			return;
 		}
 		if (province.length === 0) {
-			alertError('province is required');
+			alertError(null, 'province is required');
 			return;
 		}
 		if (town.length === 0) {
-			alertError('town is required');
+			alertError(null, 'town is required');
 			return;
 		}
 		
@@ -519,7 +521,7 @@ $(document).ready(function() {
 	    		$.ui.hideMask();
 	    	},
 	    	error: function(error) {
-	    		alertError(error.message);
+	    		alertError(error.code, error.message);
 	    	}
 	    });
 	});
@@ -566,13 +568,14 @@ $(document).ready(function() {
 						$.ui.hideMask();
 					},
 					error: function(error) {
-						alertError(error.message);
+						alertError(error.code, error.message);
 					}
 				});
 				$.ui.loadContent('#panel-politician-profile', false, false);
+				$('.pressed').removeClass('pressed');
 			},
 			error: function(object, error) {
-				alertError(error.message);
+				alertError(error.code, error.message);
 			}
 		})
 	});
@@ -587,19 +590,19 @@ $(document).ready(function() {
 		var town = $('#user-profile-town').val();
 		
 		if (displayName.length === 0 || !displayName.trim()) {
-			alertError('display name is required');
+			alertError(null, 'display name is required');
 			return;
 		}
 		if (region.length === 0) {
-			alertError('region is required');
+			alertError(null, 'region is required');
 			return;
 		}
 		if (province.length === 0) {
-			alertError('province is required');
+			alertError(null, 'province is required');
 			return;
 		}
 		if (town.length === 0) {
-			alertError('town is required');		
+			alertError(null, 'town is required');		
 			return;
 		}
 		
@@ -608,7 +611,7 @@ $(document).ready(function() {
 			success: function (user) {
 				$.ui.hideMask();
 			}, error: function(user, error) {
-				alertError(error.message);
+				alertError(error.code, error.message);
 			}
 		});
 	});
@@ -646,11 +649,11 @@ $(document).ready(function() {
 		var comment = $('#rate-politician-comment').val();
 
 		if ( rate < 1 || rate > 5) {
-			alertError('rate must be 1-5');
+			alertError(null, 'rate must be 1-5');
 			return;
 		}
 		if (comment.length === 0 || !comment.trim()) {
-			alertError('comment is required');
+			alertError(null, 'comment is required');
 			return;
 		}
 		
@@ -698,14 +701,14 @@ $(document).ready(function() {
 	    					aggregateRating(rating);
 	    				},
 	    				error: function(rating, error) {
-	    					alertError(error.message);
+	    					alertError(error.code, error.message);
 	    				}
 	    			});
 					$.ui.hideModal('');
 	    		}
 	    	},
 	    	error: function(error) {
-	    		alertError(error.message);
+	    		alertError(error.code, error.message);
 	    	}
 	    });
 	});
