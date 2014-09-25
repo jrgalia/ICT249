@@ -621,15 +621,24 @@ $(document).ready(function() {
 	$('a.rate').on('click', function(e) {
 		e.preventDefault();
 		
-		var user = Parse.User.current();
-		var address = user.get('town') + ', ' + user.get('province');
-		if (address !== $('#panel-politician-profile-address').text()){
-			alertError(null, 'You can only rate officials in your town/city.');
-			return;
-		}
-		var objectId = $('#panel-politician-profile').data('objectId');
-		$('#panel-rate-politician').data('objectId', objectId);
-		$.ui.loadContent('#panel-rate-politician', false, false, 'pop');
+		Parse.User.current().fetch().then(function (user) {
+		    var verified = user.get('emailVerified');
+		    var address = user.get('town') + ', ' + user.get('province');
+		    if (address !== $('#panel-politician-profile-address').text()){
+				alertError(null, 'You can only rate officials in your town/city.');
+				return;
+			}
+		    
+		    if (!verified) {
+		    	alertError(null, 'Only verified users can rate.');
+		    	return;
+		    }
+		    
+			var objectId = $('#panel-politician-profile').data('objectId');
+			$('#panel-rate-politician').data('objectId', objectId);
+			$.ui.loadContent('#panel-rate-politician', false, false, 'pop');
+		});
+		
 	});
 	
 	
